@@ -2,3 +2,4 @@ venv/
 Lib/
 Include/
 Scripts/
+pyvenv.cfg
