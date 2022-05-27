@@ -20,7 +20,7 @@
   
           docker pull mongo
   
-  + Mongodb 컨테이너 생성
+  + MongoDB 컨테이너 생성
     + 'docker-compose.yml' 파일 생성
     
           version: '3.1'
