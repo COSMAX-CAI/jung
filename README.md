@@ -50,8 +50,35 @@
               ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
      + yml 파일을 생성한 디렉토리에서 docker-compose 명령어 실행
           
-            docker-compose up 
-  + Crawler 생성
+            docker-compose up -d
+  + MongoDB 클라이언트로 데이터 저장
+    + MongoExpress 접속
+    
+          http://localhost:8081/
+          
+    + Database 생성
+
+          patent_project
+          
+          
+    + Collection 생성
+
+          crawling_keywords
+      
+    + New Document 생성
+    
+          {
+              _id: ObjectId(),
+              keyword: '화장료',
+              created: Date(),
+              last_crawling: {
+                  crawling_date: Date(),
+                  crawling_rows: 500,
+                  total_rows: 1954
+              }
+          }
+    
+  + 파이썬으로 MongoDB 실행 및 DB 조회
     + 동일한 디렉토리에 crawl.py 파일 생성  
       
           import pymongo
@@ -97,4 +124,4 @@
   
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### 관련 링크
-
++ Docker Hub: https://hub.docker.com/_/mongo?tab=tags&page=1&ordering=last_updated
