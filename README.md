@@ -121,8 +121,7 @@
             python crawl.py 
 
 + 3주차
-  ![GitHub Logo](/images/logo.png)
-  Format: ![Alt Text](url)
+  ![3주차 코드 ](/doc/3주차.pdf)
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### 관련 링크
 + Docker Hub: https://hub.docker.com/_/mongo?tab=tags&page=1&ordering=last_updated
