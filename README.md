@@ -123,6 +123,10 @@
 + 3주차
   + MongoDB Compass 설치 
   + [Code Link](/doc/3주차.pdf)
+
++ 4주차(6/10)
+  + PostSQL 설치
+    + https://www.postgresql.org/download/  
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### 관련 링크
 + Docker Hub: https://hub.docker.com/_/mongo?tab=tags&page=1&ordering=last_updated
