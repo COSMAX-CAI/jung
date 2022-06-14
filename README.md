@@ -129,7 +129,9 @@
     + 사이트: https://www.postgresql.org/download/
     + SQL Shell
       + Database 생성  
-        + create DATABASE patents;
+      
+        create DATABASE patents;
+        
       + Database 리스트 조회
         + \list 
       + Database 선택
