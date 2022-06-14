@@ -128,8 +128,30 @@
   + PostSQL 설치
     + 사이트: https://www.postgresql.org/download/
     + SQL Shell
-      + create DATABASE patents;
-  + Django 설치
+      + Database 생성  
+        + create DATABASE patents;
+      + Database 리스트 조회
+        + \list 
+      + Database 선택
+        + \connect 데이터베이스 이름 -> \connect patents   
+  + Django (주요 코드만 작성. 세부 내용은 코드 참고)
+    + 가상환경 접속
+      + (윈도우용) venv\Scripts\activate
+    + Django 설치
+      + python -m pip install Django
+    + 프로젝트 만들기
+      + django-admin startproject post_patent
+    + 앱 생성(1)
+      + python manage.py startapp keywords
+    + 앱 생성(2)
+      + python manage.py startapp patents
+    + Rest Framework로 만들기
+      + https://www.django-rest-framework.org/api-guide/   
+    + 모델의 활성화(Migration)
+      + python manage.py makemigrations
+      + python manage.py migrate
+    + 로컬에서 실행하기
+      + python manage.py runserver 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### 관련 링크
 + Docker Hub: https://hub.docker.com/_/mongo?tab=tags&page=1&ordering=last_updated
