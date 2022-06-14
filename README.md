@@ -140,7 +140,7 @@
       
              \connect 데이터베이스 이름 -> \connect patents   
              
-  + Django (주요 코드만 작성. 세부 내용은 코드 참고)
+  + Django (주요 코드만 작성 & 세부 내용은 코드 참고)
     + 가상환경 접속
     
             (윈도우용) venv\Scripts\activate
@@ -183,7 +183,11 @@
 + PostSQL : https://www.postgresql.org/download/
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### 자주 사용하는 코드
-+ 가상환경 접속 : (윈도우용) venv\Scripts\activate
+
++ 가상환경 접속 : 
+
+      (윈도우용) venv\Scripts\activate
+      
 + gitignore 업데이트 :
  
       git rm -r --cached . 
