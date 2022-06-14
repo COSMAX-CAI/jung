@@ -133,27 +133,49 @@
             create DATABASE patents;
         
       + Database 리스트 조회
-        + \list 
+      
+            \list 
+            
       + Database 선택
-        + \connect 데이터베이스 이름 -> \connect patents   
+      
+             \connect 데이터베이스 이름 -> \connect patents   
+             
   + Django (주요 코드만 작성. 세부 내용은 코드 참고)
     + 가상환경 접속
-      + (윈도우용) venv\Scripts\activate
+    
+            (윈도우용) venv\Scripts\activate
+            
     + Django 설치
-      + python -m pip install Django
+    
+           python -m pip install Django
+      
     + 프로젝트 만들기
-      + django-admin startproject post_patent
+    
+          django-admin startproject post_patent
+      
     + 앱 생성(1)
-      + python manage.py startapp keywords
+    
+          python manage.py startapp keywords
+
+
     + 앱 생성(2)
-      + python manage.py startapp patents
+
+          python manage.py startapp patents
+
+
     + Rest Framework로 만들기
-      + https://www.django-rest-framework.org/api-guide/   
+
+          https://www.django-rest-framework.org/api-guide/
+          
     + 모델의 활성화(Migration)
-      + python manage.py makemigrations
-      + python manage.py migrate
+    
+          python manage.py makemigrations
+          python manage.py migrate
+        
     + 로컬에서 실행하기
-      + python manage.py runserver 
+    
+          python manage.py runserver 
+          
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### 관련 링크
 + Docker Hub: https://hub.docker.com/_/mongo?tab=tags&page=1&ordering=last_updated
@@ -162,7 +184,8 @@
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### 자주 사용하는 코드
 + 가상환경 접속 : (윈도우용) venv\Scripts\activate
-+ gitignore 업데이트 : 
-  + git rm -r --cached . 
-  + git add .
-  + git commit -m "update gitignore"
++ gitignore 업데이트 :
+ 
+      git rm -r --cached . 
+      git add .
+      git commit -m "update gitignore"
