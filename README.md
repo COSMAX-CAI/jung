@@ -189,6 +189,7 @@
     + https://nodejs.org/ko/
   + npm 패키지 설치
     + npm install -g <package>
+    + npm install -g @vue/cli
   + django 폴더 열기
     + vue create patent vue
     + npm run serve
