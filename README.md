@@ -176,6 +176,15 @@
     
           python manage.py runserver 
           
++ 5주차
+  + Postman 설치
+    + https://www.postman.com/downloads/
+  + GET 진행
+    + http://localhost:8000/patents/?format=json 
+  + POST 진행
+  + DELETE 진행(5번째를 지우는 경우)
+    + http://localhost:8000/patents/?5/format=json 
+          
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### 관련 링크
 + Docker Hub: https://hub.docker.com/_/mongo?tab=tags&page=1&ordering=last_updated
