@@ -184,6 +184,24 @@
   + POST 진행
   + DELETE 진행(5번째를 지우는 경우)
     + http://localhost:8000/patents/5/?format=json 
+  
+  + Node js 설치
+    + https://nodejs.org/ko/
+  + npm 패키지 설치
+    + npm install -g <package>
+  + django 폴더 열기
+    + vue create patent vue
+    + npm run serve
+  + router 설치
+    + npm i vue-router@next
+  + router 환경
+    + vue add route
+  + Boostrap
+    + https://bootstrap-vue.org/docs
+    + npm install vue bootstrap bootstrap-vue
+    + main.js 에서 import 하기
+    + import "bootstrap/dist/css/bootstrap.min.css"
+    + import "bootstrap"
           
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### 관련 링크
