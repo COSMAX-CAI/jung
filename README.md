@@ -6,8 +6,8 @@
 | 1주차(5/13) | ☑️ | ☑️ | Patent API 관련하여 내용 공유 및 프로젝트 준비 |
 | 2주차(5/20) | ☑️ | ☑️ | 1주차 과제 공유 및 MongoDB 사용해보기 |
 | 3주차(5/27) | ☑️ | ☑️ | MongoDB에 API 데이터 저장하기 |
-| 4주차(6/10) | ☑️ | ☑️ | PostgreSQL & Django 사용해보기 |
-| 5주차(6/17) |  |  ||
+| 4주차(6/10) | ☑️ |  | PostgreSQL & Django 사용해보기 |
+| 5주차(6/17) | ☑️ |  | 프론트엔드(Vue.js) 구현 & Django 연결 |
 | 6주차(6/24) |  |  ||
 | 7주차(7/1) |  |  ||
 | 8주차(7/8) |  |  ||
@@ -188,9 +188,9 @@
           http://localhost:8000/patents/5/?format=json 
   + Node js 설치
     + https://nodejs.org/ko/
-      + npm 패키지 설치
-      
-            npm install -g <package>
+    + npm 패키지 설치
+    
+          npm install -g <package>
   
   
    + Vue CLI
@@ -224,18 +224,27 @@
     
           import "bootstrap/dist/css/bootstrap.min.css"
           import "bootstrap"
+          
+  + axios 설치(백엔드 서버와 통신하기 위해)
+    + patent_vue 내 import 하기
+     
+           import axios from 'axios'
+           
+    + axios 설치
+    
+           npm install axios
   
-   + CORS(Cross Domain 이슈 해결)
-      + Django Settings.py 코드 추가
+  + CORS(Cross Domain 이슈 해결)
+     + Django Settings.py 코드 추가
       
-            INSTALLED_APPS -> 'corsheaders' 추가
-            CORS_ORIGIN_ALLOW_ALL= True
-            MIDDLEWARE ->  'corsheaders.middleware.CorsMiddleware' 추가
+           INSTALLED_APPS -> 'corsheaders' 추가
+           CORS_ORIGIN_ALLOW_ALL= True
+           MIDDLEWARE ->  'corsheaders.middleware.CorsMiddleware' 추가
   
-      + 패키지 설치
+     + 패키지 설치
       
-            pip install django-cors-headers
-            python -m pip install django-cors-headers
+           pip install django-cors-headers
+           python -m pip install django-cors-headers
           
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### 관련 링크
