@@ -176,33 +176,66 @@
     
           python manage.py runserver 
           
-+ 5주차
++ 5주차(6/17) 
+
   + Postman 설치
-    + https://www.postman.com/downloads/
-  + GET 진행
-    + http://localhost:8000/patents/?format=json 
-  + POST 진행
-  + DELETE 진행(5번째를 지우는 경우)
-    + http://localhost:8000/patents/5/?format=json 
   
+    + https://www.postman.com/downloads/
+      + GET
+          http://localhost:8000/patents/?format=json 
+      + POST 
+      + DELETE(5번째를 지우는 경우)
+          http://localhost:8000/patents/5/?format=json 
   + Node js 설치
     + https://nodejs.org/ko/
-  + npm 패키지 설치
-    + npm install -g <package>
-    + npm install -g @vue/cli
-  + django 폴더 열기
-    + vue create patent vue
-    + npm run serve
-  + router 설치
-    + npm i vue-router@next
-  + router 환경
-    + vue add route
+      + npm 패키지 설치
+      
+            npm install -g <package>
+  
+  
+   + Vue CLI
+      + Vue CLI CLI 설치
+      
+            npm install -g @vue/cli
+            
+      + Vue 프로젝트 생성(장고 프로젝트 폴더 열기)
+      
+            vue create patent vue
+            
+      + 실행하기
+      
+            npm run serve
+            
+  + Router
+      + router 설치
+      
+            npm i vue-router@next
+            
+      + router 환경
+      
+            vue add router
+        
   + Boostrap
     + https://bootstrap-vue.org/docs
-    + npm install vue bootstrap bootstrap-vue
+    
+          npm install vue bootstrap bootstrap-vue
+     
     + main.js 에서 import 하기
-    + import "bootstrap/dist/css/bootstrap.min.css"
-    + import "bootstrap"
+    
+          import "bootstrap/dist/css/bootstrap.min.css"
+          import "bootstrap"
+  
+   + CORS(Cross Domain 이슈 해결)
+      + Django Settings.py 코드 추가
+      
+            INSTALLED_APPS -> 'corsheaders' 추가
+            CORS_ORIGIN_ALLOW_ALL= True
+            MIDDLEWARE ->  'corsheaders.middleware.CorsMiddleware' 추가
+  
+      + 패키지 설치
+      
+            pip install django-cors-headers
+            python -m pip install django-cors-headers
           
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### 관련 링크
