@@ -194,7 +194,7 @@
   
   
    + Vue CLI
-      + Vue CLI CLI 설치
+      + Vue CLI 설치
       
             npm install -g @vue/cli
             
@@ -245,7 +245,11 @@
       
            pip install django-cors-headers
            python -m pip install django-cors-headers
-          
+  + 6주차(7/1)
+     + patent_vue
+      + KeywordView.vue 기능 추가
+      + PatentView.vue 기능 추가
+    
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### 관련 링크
 + Docker Hub: https://hub.docker.com/_/mongo?tab=tags&page=1&ordering=last_updated
