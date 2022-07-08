@@ -128,6 +128,10 @@
   + PostSQL 설치
     + 사이트: https://www.postgresql.org/download/
     + SQL Shell
+      + Password
+      
+            cailab_2022
+            
       + Database 생성  
       
             create DATABASE patents;
