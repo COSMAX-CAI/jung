@@ -1,11 +1,12 @@
-from ssl import OP_NO_COMPRESSION
-import pymongo
-from pymongo import MongoClient
+#from ssl import OP_NO_COMPRESSION
+import psycopg2
+#import pymongo
+#from pymongo import MongoClient
 import dotenv
 import json
 import os
 import sys
-from sqlite3 import Timestamp
+#from sqlite3 import Timestamp
 import datetime
 import urllib
 import urllib.request
@@ -16,21 +17,40 @@ def load_config_file():
         return json.load(conf_file)
 
 def get_oldest_keyword(conf):
-    result = keywords_db_collection.find_one({'updated': None})
+
+    cursor.execute(\
+        '''SELECT keyword
+            FROM keywords_keyword
+            WHERE updated is NULL''')
+
+    result = cursor.fetchone()
+
+    print("여기", result)
+
     if result != None:
         return result
    
     pivotDays = conf.get('pivot_days', 30)
     oneMonthAgo = datetime.datetime.now() - datetime.timedelta(days=pivotDays)
-    results = keywords_db_collection.find({"updated": {"$lt":oneMonthAgo}}) \
-            .sort("updated", 1).limit(1)
-    print("results", results)
-    for item in results:
-        print("item", item)
-        return item
+    print("One Month ago", oneMonthAgo)
+
+    cursor.execute(\
+        '''SELECT keyword
+            FROM keywords_keyword
+            WHERE updated < (%s)
+            ORDER BY updated ''', [oneMonthAgo])
+
+    result = cursor.fetchone()
+    print('Older than 30 days', result)
+    # results = keywords_db_collection.find({"updated": {"$lt":oneMonthAgo}}) \
+    #         .sort("updated", 1).limit(1)
+    # print("results", results)
+    # for item in results:
+    #     print("item", item)
+    #     return item
 
     #아무것도 없을 때
-    return None
+    return result
 
 def extract_db_fields(item):
     fields = ['applicantName', 'applicationDate', 'applicationNumber', 'astrtCont', 'inventionTitle', 'registerDate', 'registerNumber', 'registerStatus']
@@ -55,7 +75,8 @@ def crawl_patent_iterator(keyword):
         url = "http://plus.kipris.or.kr/kipo-api/kipi/patUtiModInfoSearchSevice/getWordSearch?word=" + encText + f"&pageNo={current_page}&numOfRows={number_of_rows}"+ "&ServiceKey=" + client_key
         #print(url)
 
-        request = urllib.request.Request(url)
+        hdr = {'Accept-Charset': 'utf-8'}
+        request = urllib.request.Request(url, headers=hdr)
         response = urllib.request.urlopen(request)
 
         if response.getcode() == 200:
@@ -73,34 +94,63 @@ def crawl_patent_iterator(keyword):
 
 # 매칭되는 것을 저장
 def store_in_db(item, keyword):
-    # key값(출원번호)
-    item['_id'] = item['applicationNumber']
+    app_number = item['applicationNumber']
+    cursor.execute(
+        '''SELECT keywords
+            FROM patents_patent
+            WHERE app_number = (%s)''',[app_number])
+
+    item_in_db = cursor.fetchone()
+    print('item in DB', item_in_db)
     
-    item_in_db = patents_db_collection.find_one({'_id': item['_id']})
     if item_in_db != None:
-        if keyword in item_in_db['keywords']:
+        if keyword in item_in_db[0]:
             print(f"{item['applicationNumber']} is not updated")
             return False #더이상 쿼리 안함
         else:
-            new_keywords = item_in_db['keywords'] + keyword #새로운 키워드를 집어둠
-            patents_db_collection.update_one({'_id':item['_id']}, {"$set": {'keywords': new_keywords}})
+            new_keywords = item_in_db[0] + [keyword] #새로운 키워드를 집어둠
+            cusor.execute(
+                '''UPDATE patents_patent
+                    SET keywords = (%s)
+                    WHERE app_number = (%s)''', [new_keywords, app_number])
+            db.commit()
+            # 다르게 바뀌는 내용들 pub date 등
             print(f"{item['applicationNumber']} is updated")
             return True
+
     else: #item이 DB에 없다면 새롭게 집어넣음
         ### 여기 다시 보기(keywords, keyword 주의)###
-        item['keywords'] = [keyword] #배열
-        patents_db_collection.insert_one(item)
+        print(item)
+        cursor.execute(
+            '''INSERT INTO patents_patent VALUES
+                (%s, %s, %s, %s, %s, %s, %s,
+                 %s, %s, %s, %s, %s, %s, %s, %s)''',
+                 [
+                    item['inventionTitle'],
+                    [keyword],
+                    item['applicationDate'],
+                    item['applicantName'],
+                    item['applicationNumber'],
+                    item.get('astrtCont', None),
+                    item.get('bigDrawing', None),
+                    item.get('drawing', None),
+                    item.get('openDate', None),
+                    item.get('openNumber', None),
+                    item.get('pubDate', None),
+                    item.get('pubNumber', None),
+                    item.get('registerDate', None),
+                    item.get('registerNumber', None),
+                    item.get('registerStatus', None)])
+        db.commit()
         print(f"{item['applicationNumber']} is updated")
         return True
 
-# Dictionary로 되어있는 keyword 가 들어가있는 dict
+# Tuple 형태로 가지고 온다
 def crawl_patents_into_db(keyword_in_db):
-
-    keyword = keyword_in_db['keyword']
-
-    incremental = keyword_in_db.get('completed', False)
-
-    keywords_db_collection.update_one({'keyword': keyword}, {"$set": {"completed": False}})
+    # 화장료 키워드가 tuple 첫번쨰 꺼
+    keyword = keyword_in_db[0]
+    
+    print('keyword', keyword)
 
     known_count = 0 
     accepting_known_patents = 50 #50개 이상 아는 것이 나오면 정지할 수 있다.
@@ -112,15 +162,8 @@ def crawl_patents_into_db(keyword_in_db):
         #print("main", item)  
         
         updated = store_in_db(item, keyword)
-        if incremental:
-            if not updated:
-                known_count +=1
-            else: 
-                known_count = 0
-            if known_count >= accepting_known_patents:
-                break
 
-    keywords_db_collection.update_one({'keyword': keyword}, {"$set": {"completed": True, "updated":datetime.datetime.now()}})
+    # keywords_db_collection.update_one({'keyword': keyword}, {"$set": {"completed": True, "updated":datetime.datetime.now()}})
         
 
 
@@ -131,24 +174,18 @@ if __name__ == '__main__':
     # 설정파일 불러오기
     conf = load_config_file()
 
-    # mongoDB 초기화
-    mongo_user = os.getenv('MONGO_INITDB_ROOT_USERNAME')
-    mongo_password = os.getenv('MONGO_INITDB_ROOT_PASSWORD')
+    # DB 초기화
+    db_user = os.getenv('DB_ROOT_USERNAME')
+    db_password = os.getenv('DB_ROOT_PASSWORD')
 
-    cluster = MongoClient(f"mongodb://{mongo_user}:{mongo_password}@localhost/")
-    print(mongo_user)
-    print(mongo_password)
-    print(cluster)
-
-
-    db = cluster["patent_project"]
-    keywords_db_collection = db["crawling_keywords"]
-    patents_db_collection = db['patents']
+    db = psycopg2.connect(host='localhost', dbname='patents', port=5432, user=db_user, password=db_password)
+    cursor = db.cursor()
 
     keywords_per_day = conf.get('keywords_per_day', 1)
+
     for idx in range(0, keywords_per_day):
         keyword = get_oldest_keyword(conf)
-        print(keyword)
+        print('Oldest Keyword', keyword)
         if keyword == None:
             print("No more keyword remained")
             sys.exit(0)
