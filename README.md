@@ -123,7 +123,7 @@
 
 + 3주차
   + MongoDB Compass 설치 
-  + [Code Link](/doc/3주차.pdf)
+  + [Code Link](/doc/220527_3주차.pdf)
 
 + 4주차(6/10)
   + PostSQL 설치
