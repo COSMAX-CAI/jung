@@ -250,20 +250,20 @@
       
            pip install django-cors-headers
            python -m pip install django-cors-headers
-  + 6주차(7/1)
-     + patent_vue
-        + KeywordView.vue 기능 추가
-        + PatentView.vue 기능 추가
++ 6주차(7/1)
+   + patent_vue
+      + KeywordView.vue 기능 추가
+      + PatentView.vue 기능 추가
         
-  + 7주차(7/8)
-     + [장고] post_patent
-        + patents 모델 수정
-        + keywords 모델 수정
-        
-     + Postgre SQL
-        + Table 생성 -> patents
-        + crawl.py 작성
-          + [Code Link](/doc/220708_7주차.pdf)
++ 7주차(7/8)
+   + [장고] post_patent
+      + patents 모델 수정
+      + keywords 모델 수정
+
+   + Postgre SQL
+      + Table 생성 -> patents
+      + crawl.py 작성
+        + [Code Link](/doc/220708_7주차.pdf)
           
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### 관련 링크
