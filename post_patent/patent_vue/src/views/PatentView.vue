@@ -1,4 +1,5 @@
 <template>
+
   <div class="input-group mb-3">
     <span class="input-group-text">키워드 검색</span>
     <select class="form-select" v-model="searchKeyword" @change="search">
@@ -10,227 +11,194 @@
         </option>
     </select>    
   </div>
-  <button type="button" class="btn btn-primary m-2"
-    data-bs-toggle="modal"
-    data-bs-target="#exampleModal"
-    @click="addClick()">
-    특허 추가
-  </button>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>
-          출원번호
-        </th>
-        <th>
-          특허명
-        </th>
-        <th>
-          삭제
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="pat in patents" :key="pat.id">
-        <td>
-          {{pat.registration_number}}
-        </td>
-        <td>
-          {{pat.title}}
-        </td>
-        <td>
-          <button type="button" class="btn btn-light mr-1"
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
-            @click="modifyClick(pat.id)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
-                <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
-            </svg>
-          </button>
-          <button type="button" class="btn btn-light mr-1"
-            @click="deleteClick(pat.id)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-              <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-              <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-            </svg>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+
+  <a v-if="prev_page != null" @click="setUrl(prev_page, -1)" href="#">
+      &#60;
+  </a>
+  <a @click="gotoPage(2)" href="#">
+      {{page_number +1 }}
+  </a>
+  <a v-if="next_page != null" @click="setUrl(next_page, 1)" href="#">
+      &#62;
+  </a>
+
+  <div v-for="(pat, idx) in patents" :key="pat.app_number">
+      <ul>
+          <div>{{ idx + 1 + page_number*10}}
+            <img v-if="pat.drawing !== null" v-bind:src="pat.drawing"  alt="" width="150" height="150">
+              <br> 제목 : {{ pat.title }} ({{pat.app_name}}) <br> 등록상태 : {{ pat.reg_status }} <br> 설명 : {{ pat.astr_cont }}
+              <br>
+                  <button type="button" class="btn btn-light mr-1"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                  @click="modifyClick(pat)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                  </svg>
+                  
+                </button>
+                <button type="button" class="btn btn-light mr-1"
+                  @click="deleteClick(pat.app_number)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                  </svg>
+                </button>
+          </div>
+      </ul>
+  </div>
+  
 
   <div class="modal fade" id="exampleModal" tabindex="-1"
-    arialabelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="examplemodalLabel">
-            {{modalTitle}}
-          </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"
-            aria-label="Close">
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="input-group mb-3">
-            <span class="input-group-text">출원번호</span>
-            <input type="text" class="form-control" v-model="regNumber"/>
+      arialabelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">
+                      {{modalTitle}}
+                  </h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"
+                      aria-label="Close"></button>
+              </div>
+              <div v-if="cur_pat != null" class="modal-body">
+                제목 : {{ cur_pat.title }} ({{cur_pat.app_name}}) <br> 등록상태 : {{ cur_pat.reg_status }} <br>
+                출원번호: {{cur_pat.app_number}} ({{cur_pat.app_date}})<br>
+                공개번호: {{cur_pat.open_number == null ? '-' : (cur_pat.open_number + '(' + cur_pat.open_date + ')')}}<br>
+                출판번호: {{cur_pat.pub_number == null ? '-' : (cur_pat.pub_number + '(' + cur_pat.pub_date + ')')}}<br>
+                등록번호: {{cur_pat.reg_number == null ? '-' : (cur_pat.reg_number + '(' + cur_pat.reg_date + ')')}}<br>
+                설명 : {{ cur_pat.astrt_cont }}
+                <br> 
+                  <div v-for="(rkw,index) in cur_pat.keywords" :key="rkw" class="input-group mb-3">
+                      <span class="input-group-text">키워드 {{index + 1}}</span>
+                      <select class="form-select" v-model="cur_pat.keywords[index]" @change="keywordChanged">
+                          <option v-for="kw in keywords" :key="kw.id">
+                              {{kw.keyword}}
+                          </option>
+                          <option key="">
+                          </option>
+                      </select>
+                  </div>
+                  <div class="input-group mb-3">
+                      <span class="input-group-text">추가할 키워드</span>
+                      <select class="form-select" v-model="regKeywordToAdd" @change="keywordAdded">
+                          <option v-for="kw in keywords" :key="kw.id">
+                              {{kw.keyword}}
+                          </option>
+                          <option key="">
+                          </option>
+                      </select>
+                  </div>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                      @click="updateClick()">
+                      키워드 수정
+                  </button>
+              </div>
           </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">특허명</span>
-            <input type="text" class="form-control" v-model="regTitle"/>
-          </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">초록</span>
-            <input type="text" class="form-control" v-model="regAbstract"/>
-          </div>
-        <div v-for="(rkw, index) in regKeywords" :key="rkw" class="input-group mb-3">
-            <span class="input-group-text">키워드{{index+1}}</span>
-            <select class="form-select" v-model="regKeywords[index]" @change="keywordChanged">
-                <option v-for="kw in keywords" :key="kw.id">
-                    {{kw.keyword}}
-                </option>
-            </select>
-          </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text">추가할 키워드</span>
-            <select class="form-select" v-model="regKeywordToAdd" @change="keywordAdded">
-                <option v-for="kw in keywords" :key="kw.id">
-                    {{kw.keyword}}
-                </option>
-            </select>
-          </div>          
-          <button v-if="regId<0" type="button" class="btn btn-primary" data-bs-dismiss="modal"
-            @click="createClick()">
-            생성
-          </button>          
-          <button v-if="regId >= 0" type="button" class="btn btn-primary" data-bs-dismiss="modal"
-            @click="updateClick()">
-            수정
-          </button>
-        </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
 
 import axios from 'axios'
 export default {
-  name: 'PatentView',
-  data() {
-    return {
-      patents: [],
-      regId: -1,
-      regNumber: "",
-      regTitle: "",
-      regAbstract: "",
-      regKeywords: [],
-      regKeywordToAdd: "",
+    name: 'PatentView',
+    data() {
+        return {
+            patents: [],
+            
+            keywords: [],
 
-      keywords: [],
+            searchKeyword: "전체",
+            
+            modalTitle: "",
+            cur_pat: null,
+            prev_page: null,
+            next_page: null,
+            cur_url: null,
+            page_number: 0
+        };
+    },
+    methods: {
+        processResponse(response) {
+            this.patents = response.data.results;
+            this.prev_page = response.data.previous;
+            this.next_page = response.data.next;
 
-      searchKeyword: "전체",
+        },
+        refreshData() {
+            if(this.cur_url == null) {
+                if(this.searchKeyword === "" || this.searchKeyword === "전체") {
+                    this.cur_url = "http://localhost:8000/patents/?format=json"
+                } else {
+                    this.cur_url = "http://localhost:8000/patents/"+this.searchKeyword+"/keyword/?format=json";
+                }
+                this.page_number = 0;
+            }
 
-      modalTitle: "",
-      
-    };
-  },
-  methods: {
-    refreshData() {
-        console.log(this.keywordSearch)
-        if(this.searchKeyword=== "" || this.searchKeyword === "전체" ){
-            axios.get("http://localhost:8000/patents/?format=json")
-            .then((response) => {
-                this.patents = response.data
-            })
-        } else {
-            axios.get("http://localhost:8000/patents/"+this.searchKeyword+"/keyword/?format=json")
-            .then((response) => {
-                this.patents = response.data
-            })            
-        }
-        axios.get("http://localhost:8000/keywords/?format=json")
-            .then((response) => {
-            this.keywords = response.data
-            this.keywords.push({id: -1, keyword:"키워드 제거"})
-        })
-    },
-    search(){
-        this.refreshData()
-    },
-    deleteClick(id) {
-      if(!confirm("정말 지우시겠습니까?")) {
-        return;
-      }
-      axios.delete("http://localhost:8000/patents/" + id + "/?format=json")
-        .then(() => {
-          alert("삭제하였습니다.")
-          this.refreshData()
-        })
-    },
-    addClick() {
+            axios.get(this.cur_url)
+                    .then((response) => {
+                        this.processResponse(response)
+                    })
+            axios.get("http://localhost:8000/keywords/?format=json")
+                .then((response) => {
+                    this.keywords = response.data.results
+                })
+        },
+        setUrl(url, inc) {
+            this.cur_url = url;
+            this.page_number += inc;
+            this.refreshData();
+        },
+        gotoPage(page_number) {
+            this.page_number = page_number;
+            if(this.searchKeyword === "" || this.searchKeyword === "전체") {
+                this.cur_url = "http://localhost:8000/patents/?format=json&page="+page_number;
+                } else {
+                    this.cur_url = "http://localhost:8000/patents/"+this.searchKeyword+"/keyword/?format=json&page="+page_number;
+                }
 
-        this.regId = -1
+            this.refreshData();
+        },
+        search() {
+            this.cur_url = null;
+            this.refreshData()
+        },
+        deleteClick(id) {
+            if(!confirm("정말 지우시겠습니까?")) {
+                return;
+            }
 
-        this.regNumber=""
-        this.regTitle=""
-        this.regAbstract=""
-        this.regKeywords=[]
-        this.regKeywordToAdd=""
-
-      this.modalTitle= "특허 추가"
-    },
-    createClick() {
-      axios.post("http://localhost:8000/patents/?format=json",
-      {
-        registration_number : this.regNumber,
-        title : this.regTitle,
-        abstract : this.regAbstract,
-        keywords : this.regKeywords
-      })
-        .then(() => {
-          alert("생성하였습니다.")
-          this.refreshData()
-      })
-    },
-    modifyClick(id){
-        this.modalTitle= "특허 수정"
-        
-        const patent = this.patents.find(pat => pat.id === id)
-
-        this.regId = id
-
-        this.regNumber=patent.registration_number
-        this.regTitle=patent.title
-        this.regAbstract=patent.abstract
-        this.regKeywords=patent.keywords
-    },
-    keywordAdded(){
-        this.regKeywords.push(this.regKeywordToAdd)
-        this.regKeywordToAdd = ""
-    },
-    keywordChanged(){
-        console.log("키워드변화")
-        this.regKeywords = this.regKeywords.filter(kw => kw !== "키워드 제거")
-    },
-    updateClick() {
-        axios.put("http://localhost:8000/patents/" + this.regId + "/?format=json",
-            {
-                registration_number : this.regNumber,
-                title : this.regTitle,
-                abstract : this.regAbstract,
-                keywords : this.regKeywords
-            })
-            .then(() => {
-                alert("수정하였습니다.")
+            axios.delete("http://localhost:8000/patents/" + id + "/?format=json")
+                .then(() => {
+                alert("삭제하였습니다.")
                 this.refreshData()
             })
+        },
+        modifyClick(pat) {
+            this.modalTitle = "특허 상세"
+
+            this.cur_pat = pat
+        },
+        keywordAdded() {
+            this.cur_pat.keywords.push(this.regKeywordToAdd)
+            this.regKeywordToAdd = ""
+        },
+        keywordChanged() {
+            this.cur_pat.keywords = this.cur_pat.keywords.filter(kw => kw !== "")
+        },
+        updateClick() {
+            axios.put("http://localhost:8000/patents/"+this.cur_pat.app_number+"/?format=json",
+                this.cur_pat)
+                .then(() => {
+                    alert("수정하였습니다.")
+                    this.refreshData()
+                })            
+        }
+    },
+    mounted:function() {
+        this.refreshData()
     }
-  },
-  mounted:function() {
-    this.refreshData()
-  }
+    
 }
 </script>

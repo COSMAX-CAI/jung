@@ -111,7 +111,7 @@ def store_in_db(item, keyword):
     print('item in DB', item_in_db)
     
     if item_in_db != None:
-        if keyword in item_in_db[0]:c
+        if keyword in item_in_db[0]:
 
             print(f"{item['applicationNumber']} is not updated")
             return False #더이상 쿼리 안함
@@ -155,34 +155,64 @@ def store_in_db(item, keyword):
 
 # keyword와 연관된 특허를 crawling하여 DB에 저장
 # Tuple 형태로 가지고 온다
-def crawl_patents_into_db(keyword_in_db):
-    # 화장료 키워드가 tuple 첫번쨰 꺼 위치하니까 [0]
-    keyword = keyword_in_db[0]
+# def crawl_patents_into_db(keyword_in_db):
+#     # 화장료 키워드가 tuple 첫번쨰 꺼 위치하니까 [0]
+#     keyword = keyword_in_db[0]
     
+#     print('keyword', keyword)
+
+#     # yield에서 반횐된것
+#     # 하나씩 반환하여 후처리 함
+#     for item in crawl_patent_iterator(keyword):
+#         if item == None: #None은 예외적인 경우
+#             print(f"{keyword} 검색중에 문제가 발생하였습니다.")
+#             sys.exit(1) #error는 1
+#         #print("main", item)  
+        
+#         # crawling 전처리 update 후처리
+#         updated = store_in_db(item, keyword)
+
+#         # cursor.execute(
+#         #     '''UPDATE
+#         #         keywords_keyword
+#         #         SET updated=(%s)
+#         #         WHERE keyword=(%s)
+#         #     ''', datetime.datetime.now(), keyword)
+
+#         # db.commit()
+        
+#         cursor.exectue(
+#             '''UPDATE
+#                 keywords_keyword
+#                 SET update = (%s)
+#                 WHERE keyword = (%s)
+#             ''', datetime.datetime.now(), keyword)
+#         db.commit()
+
+#     # keywords_db_collection.update_one({'keyword': keyword}, {"$set": {"completed": True, "updated":datetime.datetime.now()}})
+
+# Dictionary로 되어있는 keyword 가 들어가있는 dict
+def crawl_patents_into_db(keyword_in_db):
+
+    keyword = keyword_in_db[0]
+
     print('keyword', keyword)
 
-    # yield에서 반횐된것
-    # 하나씩 반환하여 후처리 함
+    # crawl_patent_iterator => generator
     for item in crawl_patent_iterator(keyword):
-        if item == None: #None은 예외적인 경우
+        if item == None:
             print(f"{keyword} 검색중에 문제가 발생하였습니다.")
             sys.exit(1) #error는 1
-        #print("main", item)  
         
-        # crawling 전처리 update 후처리
         updated = store_in_db(item, keyword)
 
-        cursor.execute(
-            '''UPDATE
-                keywords_keyword
-                SET updated=(%s)
-                WHERE keyword=(%s)
-            ''', datetime.datetime.now(), keyword)
-
-        db.commit()
-
-    # keywords_db_collection.update_one({'keyword': keyword}, {"$set": {"completed": True, "updated":datetime.datetime.now()}})
-        
+    cursor.exectue(
+        '''UPDATE
+            keywords_keyword
+            SET update = (%s)
+            WHERE keyword = (%s)
+        ''', datetime.datetime.now(), keyword)
+    db.commit() 
 
 
 if __name__ == '__main__':
